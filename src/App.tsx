@@ -1,10 +1,23 @@
+
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import Layout from "./components/Layout";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
+import Login from "./pages/Login";
+import Signup from "./pages/Signup";
+import Dashboard from "./pages/Dashboard";
+import CreateGroup from "./pages/CreateGroup";
+import JoinGroup from "./pages/JoinGroup";
+import GroupDetail from "./pages/GroupDetail";
+import AddExpense from "./pages/AddExpense";
+import Settle from "./pages/Settle";
+import ExportData from "./pages/ExportData";
+import Profile from "./pages/Profile";
+import ProtectedRoute from "./components/ProtectedRoute";
 
 const queryClient = new QueryClient();
 
@@ -15,9 +28,55 @@ const App = () => (
       <Sonner />
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<Index />} />
-          {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-          <Route path="*" element={<NotFound />} />
+          <Route path="/" element={<Layout />}>
+            <Route index element={<Index />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/signup" element={<Signup />} />
+            
+            {/* Protected Routes */}
+            <Route path="/dashboard" element={
+              <ProtectedRoute>
+                <Dashboard />
+              </ProtectedRoute>
+            } />
+            <Route path="/groups/create" element={
+              <ProtectedRoute>
+                <CreateGroup />
+              </ProtectedRoute>
+            } />
+            <Route path="/groups/join" element={
+              <ProtectedRoute>
+                <JoinGroup />
+              </ProtectedRoute>
+            } />
+            <Route path="/groups/:id" element={
+              <ProtectedRoute>
+                <GroupDetail />
+              </ProtectedRoute>
+            } />
+            <Route path="/groups/:id/add-expense" element={
+              <ProtectedRoute>
+                <AddExpense />
+              </ProtectedRoute>
+            } />
+            <Route path="/groups/:id/settle" element={
+              <ProtectedRoute>
+                <Settle />
+              </ProtectedRoute>
+            } />
+            <Route path="/groups/:id/export" element={
+              <ProtectedRoute>
+                <ExportData />
+              </ProtectedRoute>
+            } />
+            <Route path="/profile" element={
+              <ProtectedRoute>
+                <Profile />
+              </ProtectedRoute>
+            } />
+            
+            <Route path="*" element={<NotFound />} />
+          </Route>
         </Routes>
       </BrowserRouter>
     </TooltipProvider>
