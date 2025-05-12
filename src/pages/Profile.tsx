@@ -1,7 +1,7 @@
 
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { getCurrentUser, logout, User } from "@/lib/auth";
+import { getCurrentUserSync, logout, User } from "@/lib/auth";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -10,6 +10,7 @@ import { PageTransition } from "@/components/AnimationProvider";
 import { motion } from "framer-motion";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import apiClient from "@/lib/apiClient";
 
 const Profile = () => {
   const navigate = useNavigate();
@@ -19,7 +20,7 @@ const Profile = () => {
   const [isUpdating, setIsUpdating] = useState(false);
 
   useEffect(() => {
-    const currentUser = getCurrentUser();
+    const currentUser = getCurrentUserSync();
     if (!currentUser) {
       navigate("/login");
       return;
@@ -30,24 +31,32 @@ const Profile = () => {
     setEmail(currentUser.email);
   }, [navigate]);
 
-  const handleUpdateProfile = (e: React.FormEvent) => {
+  const handleUpdateProfile = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    // In a real app, this would call an API endpoint
-    setIsUpdating(true);
-    
-    // Simulate API call
-    setTimeout(() => {
+    try {
+      setIsUpdating(true);
+      
+      const response = await apiClient.put('/users/me', { name, email });
+      
       // Update local user data
       if (user) {
-        const updatedUser = { ...user, name, email };
+        const updatedUser = { 
+          ...user, 
+          name, 
+          email 
+        };
         localStorage.setItem("budgetsplit_user", JSON.stringify(updatedUser));
         setUser(updatedUser);
       }
       
       toast.success("Profile updated successfully");
+    } catch (error) {
+      console.error("Failed to update profile:", error);
+      toast.error("Failed to update profile");
+    } finally {
       setIsUpdating(false);
-    }, 1000);
+    }
   };
 
   const handleLogout = async () => {

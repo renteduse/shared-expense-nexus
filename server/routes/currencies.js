@@ -2,46 +2,33 @@
 const express = require('express');
 const router = express.Router();
 const auth = require('../middleware/auth');
-const { fetchExchangeRates, convertCurrency } = require('../utils/currencyConverter');
+const { getExchangeRates } = require('../utils/balanceCalculator');
 
 // @route   GET api/currencies/rates
 // @desc    Get current exchange rates
 // @access  Private
 router.get('/rates', auth, async (req, res) => {
   try {
-    const rates = await fetchExchangeRates();
-    res.json(rates);
+    const rates = await getExchangeRates();
+    res.json({ rates });
   } catch (err) {
     console.error(err.message);
     res.status(500).send('Server error');
   }
 });
 
-// @route   POST api/currencies/convert
-// @desc    Convert amount between currencies
+// @route   GET api/currencies/list
+// @desc    Get list of available currencies
 // @access  Private
-router.post('/convert', auth, async (req, res) => {
-  const { amount, fromCurrency, toCurrency } = req.body;
-  
-  if (!amount || !fromCurrency || !toCurrency) {
-    return res.status(400).json({ 
-      msg: 'Please provide amount, fromCurrency, and toCurrency' 
-    });
-  }
-  
+router.get('/list', auth, async (req, res) => {
   try {
-    const convertedAmount = await convertCurrency(
-      parseFloat(amount),
-      fromCurrency,
-      toCurrency
-    );
+    const rates = await getExchangeRates();
+    const currencies = Object.keys(rates).map(code => ({
+      code,
+      rate: rates[code]
+    }));
     
-    res.json({
-      amount: parseFloat(amount),
-      fromCurrency,
-      toCurrency,
-      convertedAmount
-    });
+    res.json({ currencies });
   } catch (err) {
     console.error(err.message);
     res.status(500).send('Server error');

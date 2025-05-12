@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
 import { useState, useEffect } from "react";
-import { getCurrentUser, isAuthenticated, logout } from "@/lib/auth";
+import { getCurrentUserSync, isAuthenticated, logout } from "@/lib/auth";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -17,12 +17,12 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 const Navbar = () => {
   const navigate = useNavigate();
   const [isAuth, setIsAuth] = useState(isAuthenticated());
-  const [user, setUser] = useState(getCurrentUser());
+  const [user, setUser] = useState(getCurrentUserSync());
 
   useEffect(() => {
     const checkAuth = () => {
       setIsAuth(isAuthenticated());
-      setUser(getCurrentUser());
+      setUser(getCurrentUserSync());
     };
 
     // Check auth on mount
@@ -75,6 +75,15 @@ const Navbar = () => {
         <nav className="hidden md:flex items-center space-x-4">
           <Link to="/" className="text-foreground/70 hover:text-foreground transition-colors">
             Home
+          </Link>
+          <Link to="/features" className="text-foreground/70 hover:text-foreground transition-colors">
+            Features
+          </Link>
+          <Link to="/pricing" className="text-foreground/70 hover:text-foreground transition-colors">
+            Pricing
+          </Link>
+          <Link to="/faqs" className="text-foreground/70 hover:text-foreground transition-colors">
+            FAQs
           </Link>
           {isAuth && (
             <>

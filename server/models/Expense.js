@@ -18,16 +18,12 @@ const ExpenseSchema = new Schema({
   },
   currency: {
     type: String,
-    required: true,
     default: 'USD'
   },
   paidBy: {
-    user: {
-      type: Schema.Types.ObjectId,
-      ref: 'User',
-      required: true
-    },
-    name: String
+    type: Schema.Types.ObjectId,
+    ref: 'User',
+    required: true
   },
   participants: [
     {
@@ -36,7 +32,6 @@ const ExpenseSchema = new Schema({
         ref: 'User',
         required: true
       },
-      name: String,
       share: {
         type: Number,
         required: true

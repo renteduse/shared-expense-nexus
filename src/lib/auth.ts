@@ -43,6 +43,15 @@ export const getCurrentUser = async (): Promise<User | null> => {
   return null;
 };
 
+// Modified version that doesn't return a promise for components that need synchronous access
+export const getCurrentUserSync = (): User | null => {
+  const savedUser = localStorage.getItem('budgetsplit_user');
+  if (savedUser) {
+    return JSON.parse(savedUser);
+  }
+  return null;
+};
+
 export const login = async (email: string, password: string): Promise<User> => {
   try {
     // Validate input

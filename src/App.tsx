@@ -17,6 +17,11 @@ import AddExpense from "./pages/AddExpense";
 import Settle from "./pages/Settle";
 import ExportData from "./pages/ExportData";
 import Profile from "./pages/Profile";
+import Features from "./pages/Features";
+import Pricing from "./pages/Pricing";
+import FAQs from "./pages/FAQs";
+import Privacy from "./pages/Privacy";
+import Terms from "./pages/Terms";
 import ProtectedRoute from "./components/ProtectedRoute";
 
 const queryClient = new QueryClient();
@@ -32,6 +37,11 @@ const App = () => (
             <Route index element={<LandingPage />} />
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<Signup />} />
+            <Route path="/features" element={<Features />} />
+            <Route path="/pricing" element={<Pricing />} />
+            <Route path="/faqs" element={<FAQs />} />
+            <Route path="/privacy" element={<Privacy />} />
+            <Route path="/terms" element={<Terms />} />
             
             {/* Protected Routes */}
             <Route path="/dashboard" element={
